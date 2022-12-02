@@ -1,0 +1,26 @@
+---                                                                                                                   
+  - name: download from git and build container                                                                                               
+    hosts: localhost
+    connection: local
+    vars:
+      ansible_python_interpreter: /Users/polini01/.pyenv/versions/3.10.6/bin/python3                                                                                               
+    tasks:  
+
+      - name: Clone a github repository                                                               
+        git:
+         repo: https://github.com/iggie07/Aura.git
+         dest: ~/Auratest
+         clone: yes
+         update: yes
+
+      - name: Build docker image
+        docker_image:
+          name: postgres_auradb
+          build:
+            path: ~/Auratest
+          source: build
+
+      - name: Run container
+        docker_container:
+          name: auradb_container
+          image: postgres_auradb
